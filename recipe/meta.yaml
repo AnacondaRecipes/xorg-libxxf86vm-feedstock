@@ -1,16 +1,14 @@
 {% set xorg_name = "libXxf86vm" %}
-{% set xorg_category = "lib" %}
 {% set name = "xorg-" ~ xorg_name %}
-{% set version = "1.1.6" %}
-{% set sha256 = "96af414c73ce1d5449ad04be7f9f27fa8330f844b6dda843ef22e3e1befb3ee3" %}
+{% set version = "1.1.7" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.xz
-  sha256: {{ sha256 }}
+  url: https://www.x.org/releases/individual/lib/{{ xorg_name }}-{{ version }}.tar.xz
+  sha256: ae50c0f669e0af5a67cc4cd0f54f21d64a64d2660af883e80e95d3fe51b945d8
 
 build:
   number: 0
@@ -21,21 +19,16 @@ build:
 
 requirements:
   build:
-    - m2-autoconf                  # [win]
-    - m2-automake{{ am_version }}  # [win]
-    - m2-libtool                   # [win]
-    - pkg-config                   # [unix]
-    - m2-pkg-config                # [win]
-    - gnuconfig                    # [unix]
-    - m2-base                      # [win]
-    - make                         # [unix]
-    - m2-make                      # [win]
-    - {{ compiler("c") }}          # [unix]
-    - {{ compiler("m2w64_c") }}    # [win]
-    - autoconf                     # [unix]
-    - automake                     # [unix]
-    - gettext                      # [unix]
-    - libtool                      # [unix]
+    - {{ stdlib('c') }}
+    - {{ compiler("c") }}
+    - pkg-config
+    - gnuconfig
+    - make
+    - autoconf
+    - automake
+    - gettext
+    - libtool
+    - xorg-util-macros
   host:
     - pthread-stubs
     - xorg-util-macros
@@ -49,8 +42,6 @@ test:
     {% for lib_ident in lib_idents %}
     - test -f $PREFIX/lib/lib{{ lib_ident }}.dylib  # [osx]
     - test -f $PREFIX/lib/lib{{ lib_ident }}.so     # [linux]
-    - if not exist %PREFIX%/Library/lib/lib{{ lib_ident }}.dll.a exit /b 1  # [win]
-    - if not exist %PREFIX%/Library/bin/msys-{{ lib_ident }}-*.dll exit /b 1  # [win]
     {% endfor %}
 
 about:
