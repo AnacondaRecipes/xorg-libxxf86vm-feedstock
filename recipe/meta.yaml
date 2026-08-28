@@ -1,5 +1,4 @@
-{% set xorg_name = "libXxf86vm" %}
-{% set name = "xorg-" ~ xorg_name %}
+{% set name = "xorg-libXxf86vm" %}
 {% set version = "1.1.7" %}
 
 package:
@@ -7,7 +6,7 @@ package:
   version: {{ version }}
 
 source:
-  url: https://www.x.org/releases/individual/lib/{{ xorg_name }}-{{ version }}.tar.xz
+  url: https://www.x.org/releases/individual/lib/{{ name.split('-')[1] }}-{{ version }}.tar.xz
   sha256: ae50c0f669e0af5a67cc4cd0f54f21d64a64d2660af883e80e95d3fe51b945d8
 
 build:
@@ -20,7 +19,7 @@ build:
 requirements:
   build:
     - {{ stdlib('c') }}
-    - {{ compiler("c") }}
+    - {{ compiler('c') }}
     - pkg-config
     - gnuconfig
     - make
@@ -28,21 +27,17 @@ requirements:
     - automake
     - gettext
     - libtool
-    - xorg-util-macros
   host:
-    - pthread-stubs
-    - xorg-util-macros
-    - xorg-xorgproto
-    - xorg-libx11
-    - xorg-libxext
+    - pthread-stubs ==0.3
+    - xorg-util-macros ==1.20.2
+    - xorg-xorgproto {{ xorg_xorgproto }}
+    - xorg-libx11 {{ xorg_libx11 }}
+    - xorg-libxext {{ xorg_libxext }}
 
 test:
   commands:
-    {% set lib_idents = [ "Xxf86vm" ] %}
-    {% for lib_ident in lib_idents %}
-    - test -f $PREFIX/lib/lib{{ lib_ident }}.dylib  # [osx]
-    - test -f $PREFIX/lib/lib{{ lib_ident }}.so     # [linux]
-    {% endfor %}
+    - test -f $PREFIX/lib/libXxf86vm.dylib  # [osx]
+    - test -f $PREFIX/lib/libXxf86vm.so     # [linux]
 
 about:
   home: https://www.x.org/
@@ -50,6 +45,8 @@ about:
   license_family: MIT
   license_file: COPYING
   summary: Xlib-based library for the XFree86-VidMode X extension
+  description: |
+    Xlib-based library for the XFree86-VidMode X extension
   dev_url: https://gitlab.freedesktop.org/xorg/lib/libxxf86vm
   doc_url: https://gitlab.freedesktop.org/xorg/lib/libxxf86vm
 
